@@ -242,3 +242,19 @@ echo ""
 
 echo "[✓] Installation complete!"
 echo "[*] Run 'payforge-login' to start PayForge"
+echo "[+] Fixing directory permissions..."
+mkdir -p "$INSTALL_DIR/database"
+mkdir -p "$INSTALL_DIR/config"
+mkdir -p "$INSTALL_DIR/logs"
+
+# Create user's home .payforge directory
+HOME_DIR=$(eval echo ~${SUDO_USER:-$(whoami)})
+mkdir -p "$HOME_DIR/.payforge"
+chmod 755 "$HOME_DIR/.payforge"
+
+# Fix permissions
+chmod 755 "$INSTALL_DIR"
+chmod 755 "$INSTALL_DIR/database"
+chmod 755 "$INSTALL_DIR/config"
+chmod 755 "$INSTALL_DIR/logs"
+chmod 755 "$INSTALL_DIR/payloads"
