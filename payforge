@@ -1,0 +1,173 @@
+#!/usr/bin/env python3
+
+"""
+PayForge - Professional Security Testing Framework
+Main CLI Entry Point
+"""
+
+import sys
+import os
+import argparse
+import json
+from datetime import datetime
+
+# Add src to path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+from console.cli import PayForgeConsole
+from auth.electron_auth import ElectronAuth
+from database.db_handler import DatabaseHandler
+from utils.logger import Logger
+
+class PayForge:
+    def __init__(self):
+        self.logger = Logger("PayForge")
+        self.auth = ElectronAuth()
+        self.db = DatabaseHandler()
+        self.console = PayForgeConsole()
+        
+    def authenticate(self):
+        """Launch Electron login screen"""
+        self.logger.info("Launching authentication screen...")
+        user_data = self.auth.launch_electron_login()
+        
+        if not user_data:
+            self.logger.error("Authentication failed")
+            sys.exit(1)
+            
+        self.logger.success(f"Authenticated as: {user_data['username']}")
+        return user_data
+    
+    def run_scan(self, target, scan_type="full"):
+        """Run security scan on target"""
+        self.logger.info(f"Starting {scan_type} scan on {target}...")
+        
+        scan_config = {
+            "target": target,
+            "type": scan_type,
+            "timestamp": datetime.now().isoformat(),
+            "status": "running"
+        }
+        
+        self.db.save_scan(scan_config)
+        self.logger.success(f"Scan initiated on {target}")
+    
+    def show_help(self):
+        """Display help information"""
+        help_text = """
+╔════════════════════════════════════════════════════════════════╗
+║           PayForge - Security Testing Framework               ║
+║              Version 1.0.0 | Professional Edition             ║
+╚════════════════════════════════════════════════════════════════╝
+
+USAGE:
+    payforge [COMMAND] [OPTIONS]
+
+COMMANDS:
+    console              Start interactive console
+    scan                 Run security scans
+    module               Load and execute modules
+    report               Generate security reports
+    config               Configure PayForge settings
+    auth                 Manage authentication
+    help                 Show this help message
+
+EXAMPLES:
+    payforge console
+    payforge scan -t 192.168.1.1 --type full
+    payforge module -l reconnaissance
+    payforge report --format pdf
+    payforge-login       Launch Electron login screen
+
+OPTIONS:
+    -t, --target         Target IP/Domain
+    --type              Scan type (quick, full, custom)
+    -l, --list          List available modules
+    --format            Report format (pdf, html, json)
+    -v, --verbose       Enable verbose output
+    -h, --help          Show help message
+
+AUTHENTICATION:
+    First run 'payforge-login' to authenticate
+    Login credentials stored securely in encrypted database
+
+CONFIGURATION:
+    Edit: /opt/payforge/config/payforge.conf
+    Logs: /opt/payforge/logs/
+
+ETHICAL GUIDELINES:
+    Always obtain proper authorization before testing
+    Respect target systems and user privacy
+    Report vulnerabilities responsibly
+    Read: /opt/payforge/config/ethical_guidelines.md
+
+For more information: https://github.com/Obito-root/payforge
+        """
+        print(help_text)
+    
+    def main(self):
+        """Main entry point"""
+        parser = argparse.ArgumentParser(
+            description="PayForge - Professional Security Testing Framework",
+            add_help=False
+        )
+        
+        parser.add_argument('command', nargs='?', default='help',
+                          help='Command to execute')
+        parser.add_argument('-t', '--target', help='Target IP/Domain')
+        parser.add_argument('--type', default='full', help='Scan type')
+        parser.add_argument('-l', '--list', action='store_true', 
+                          help='List modules')
+        parser.add_argument('--format', default='json', help='Output format')
+        parser.add_argument('-v', '--verbose', action='store_true',
+                          help='Verbose output')
+        parser.add_argument('-h', '--help', action='store_true',
+                          help='Show help')
+        
+        args = parser.parse_args()
+        
+        # Display help
+        if args.help or args.command == 'help':
+            self.show_help()
+            return
+        
+        # Authenticate first (except for help)
+        if args.command not in ['help', 'auth']:
+            user_data = self.authenticate()
+        
+        # Execute commands
+        if args.command == 'console':
+            self.console.start(user_data if 'user_data' in locals() else None)
+            
+        elif args.command == 'scan':
+            if not args.target:
+                self.logger.error("Target required: -t <target>")
+                sys.exit(1)
+            self.run_scan(args.target, args.type)
+            
+        elif args.command == 'module':
+            if args.list:
+                self.console.list_modules()
+                
+        elif args.command == 'report':
+            self.logger.info(f"Generating {args.format} report...")
+            self.console.generate_report(args.format)
+            
+        elif args.command == 'config':
+            self.logger.info("Opening configuration...")
+            os.system('nano /opt/payforge/config/payforge.conf')
+            
+        else:
+            self.logger.warning(f"Unknown command: {args.command}")
+            self.show_help()
+
+if __name__ == '__main__':
+    try:
+        pf = PayForge()
+        pf.main()
+    except KeyboardInterrupt:
+        print("\n[*] Exiting PayForge...")
+        sys.exit(0)
+    except Exception as e:
+        print(f"[!] Error: {str(e)}")
+        sys.exit(1)
