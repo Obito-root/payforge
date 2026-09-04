@@ -1,0 +1,20 @@
+{
+  "name": "payforge-auth",
+  "version": "1.0.0",
+  "description": "PayForge Electron Authentication Screen",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "keywords": ["payforge", "security", "testing"],
+  "author": "PayForge Team",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^latest"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.3.1"
+  }
+}
