@@ -140,6 +140,12 @@ python3 src/main.py --console
 ```bash
 payforge-login
 ```
+```username
+admin
+```
+```passwd
+admin123
+```
 
 This opens the Electron authentication screen where you must:
 1. Agree to ethical guidelines
