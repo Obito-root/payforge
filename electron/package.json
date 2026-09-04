@@ -11,7 +11,7 @@
   "author": "PayForge Team",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^latest"
+    "electron": "27.0.0"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
