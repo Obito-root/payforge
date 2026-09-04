@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayForge Authentication</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <!-- Logo and Header -->
+            <div class="header">
+                <h1>🔥 PayForge</h1>
+                <p>Professional Security Testing Framework</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-section" class="section active">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" 
+                               placeholder="Enter username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" 
+                               placeholder="Enter password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+
+                <p class="form-toggle">
+                    Don't have an account? 
+                    <a href="#" onclick="toggleSection('register-section')">Sign Up</a>
+                </p>
+
+                <div id="login-error" class="error-message"></div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-section" class="section">
+                <h2>Create Account</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" name="username" 
+                               placeholder="Choose username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" name="email" 
+                               placeholder="Enter email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" name="password" 
+                               placeholder="Create password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-confirm">Confirm Password</label>
+                        <input type="password" id="reg-confirm" name="confirm" 
+                               placeholder="Confirm password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+
+                <p class="form-toggle">
+                    Already have account? 
+                    <a href="#" onclick="toggleSection('login-section')">Sign In</a>
+                </p>
+
+                <div id="register-error" class="error-message"></div>
+            </div>
+
+            <!-- Ethical Guidelines -->
+            <div id="guidelines-section" class="section">
+                <h2>⚠️ Ethical Guidelines</h2>
+                <div id="guidelines-content" class="guidelines-box">
+                    Loading guidelines...
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree-checkbox" name="agree">
+                    <label for="agree-checkbox">
+                        I agree to use PayForge only for authorized security testing
+                    </label>
+                </div>
+
+                <button id="accept-btn" class="btn btn-primary" onclick="launchConsole()" 
+                        disabled>
+                    Accept & Launch Console
+                </button>
+
+                <button class="btn btn-secondary" onclick="toggleSection('login-section')">
+                    Back
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>⚠️ Unauthorized access to computer systems is illegal</p>
+                <p>PayForge v1.0.0 | Educational Testing Only</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>
